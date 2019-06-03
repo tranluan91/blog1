@@ -11,6 +11,8 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js','public/css/').sass("resources/sass/app.scss",'resources/admin/vendor/linearicons/style.css');
 
-mix.js('resources/js/app.js', 'public/js').js('resources/admin/vendor/bootstrap/js/bootstrap.min.js','public/js/');
+
+mix.js('resources/js/app.js', 'public/css/').sass("resources/sass/app.scss", 'resources/admin/vendor/linearicons/style.css');
+
+mix.js('resources/js/app.js', 'public/js').js('resources/admin/vendor/bootstrap/js/bootstrap.min.js', 'public/js/');

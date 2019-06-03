@@ -13,11 +13,9 @@ class TagsPost extends Migration
      */
     public function up()
     {
-        Schema::create('tagsPost', function (Blueprint $table) {
-           $table->unsignedBigInteger('post_id');
-           $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-           $table->unsignedBigInteger('tag_id');
-           $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
+        Schema::create('tags_posts', function (Blueprint $table) {
+           $table->integer('post_id')->index();
+           $table->integer('tag_id')->index();
         });
     }
 

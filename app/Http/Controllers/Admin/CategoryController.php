@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Category;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Validator;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -15,7 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::paginate(15);
+        return view('admin.category.list', ['categories' => $categories]);
     }
 
     /**
@@ -25,7 +28,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.category.add');
     }
 
     /**
@@ -36,7 +39,18 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = Validator::make($request->all(),[
+            'name' => 'required|min:4|max:10|unique:categories,name'
+        ]);
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate);
+        }
+        $category = new Category();
+        $category->name = $request->name;
+        $category->status = $request->status;
+        $category->save();
+
+        return redirect()->route('list-category')->with('status', 'Thêm mới bản ghi thành công !!'); 
     }
 
     /**
@@ -56,9 +70,14 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Category $category, $id)
     {
-        //
+        $category = Category::find($id);
+        if (!$category) {
+            return abort('404');
+        }
+
+        return view('admin.category.edit', compact('category'));
     }
 
     /**
@@ -68,9 +87,20 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Category $category, $id)
     {
-        //
+        $validate = Validator::make($request->all(),[
+            'name' => 'required|min:4|max:10'
+        ]);
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate);
+        }
+        $category = Category::find($id);
+        $category->status = $request->status;
+        $category->name = $request->name;
+        $category->save();
+        
+        return redirect()->route('list-category')->with('status', 'Update bản ghi thành công !!');
     }
 
     /**
@@ -79,8 +109,9 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category, $id)
     {
-        //
+        Category::destroy($id);
+        return redirect()->back()->with('status', 'Xóa bản ghi thành công !!');   
     }
 }

@@ -18,10 +18,8 @@ class Posts extends Migration
            $table->string('name');
            $table->string('img');
            $table->text('content');
-           $table->unsignedBigInteger('category_id');
-           $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-           $table->unsignedBigInteger('user_id');
-           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+           $table->integer('category_id')->index();
+           $table->integer('user_id')->index();
         });
     }
 

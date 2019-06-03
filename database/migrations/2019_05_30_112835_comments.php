@@ -16,11 +16,9 @@ class Comments extends Migration
        Schema::create('Comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('content');
-            $table->tinyInteger('status');
-            $table->unsignedBigInteger('post_id');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->tinyInteger('status')->default(0);
+            $table->integer('post_id')->index();
+            $table->integer('user_id')->index();
             $table->timestamps();
         });
     }
