@@ -16,11 +16,7 @@ class CreateTagsTable extends Migration
         Schema::create('tags', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
-<<<<<<< HEAD
             $table->tinyInteger('status')->default(0);
-=======
-            $table->tinyInteger('status');
->>>>>>> 3234edd565cf2eb550fa789b13aa15a036b8cedb
             $table->timestamps();
         });
     }

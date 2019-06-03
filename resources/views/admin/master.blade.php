@@ -56,6 +56,18 @@
                             <a href="" class="active"><i class="lnr lnr-home"></i> <span>Dashboard</span></a>
                         </li>
                         <li>
+                            <a href="{{ route('add-category') }}" class=""><i class="lnr lnr-code"></i> <span>New Category</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ route('list-category') }}" class=""><i class="lnr lnr-chart-bars"></i> <span>List Category</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ route('add-tag') }}" class=""><i class="lnr lnr-code"></i> <span>New Tag</span></a>
+                        </li>
+                        <li>
+                            <a href="{{ route('list-tag') }}" class=""><i class="lnr lnr-chart-bars"></i> <span>List Tag</span></a>
+                        </li>
+                        <li>
                             <a href="" class=""><i class="lnr lnr-code"></i> <span>New Post</span></a>
                         </li>
                         <li>
