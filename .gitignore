@@ -13,3 +13,6 @@ npm-debug.log
 /public/js
 /public/css
 /public/dist
+
+public/vendor/
+

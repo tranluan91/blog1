@@ -43,4 +43,12 @@ Route::group(['prefix' => 'backend', 'namespace' => 'Admin'], function()
     Route::get('/edit-tag/{id}','TagController@edit')->name('edit-tag')->where('id', '[0-9]+');
     Route::post('/edit-tag/{id}', "TagController@update")->where('id', '[0-9]+');
     Route::delete("/delete-tag/{id}","TagController@destroy")->name('delelete-tag')->where('id', '[0-9]+');
+
+//Post
+    Route::get('/add-post', "PostController@create")->name('add-post');
+    Route::post('/add-post', "PostController@store");
+    Route::get('/list-post', "PostController@index")->name('list-post');
+    Route::get('/edit-post/{id}', 'PostController@edit')->name('edit-post')->where('id', '[0-9]+');
+    Route::post('/edit-post/{id}', "PostController@update")->where('id', '[0-9]+');
+    Route::delete("/delete-post/{id}", "PostController@destroy")->name('delelete-post')->where('id', '[0-9]+'); 
 });
