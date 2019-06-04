@@ -68,10 +68,10 @@
                             <a href="{{ route('list-tag') }}" class=""><i class="lnr lnr-chart-bars"></i> <span>List Tag</span></a>
                         </li>
                         <li>
-                            <a href="" class=""><i class="lnr lnr-code"></i> <span>New Post</span></a>
+                            <a href="{{ route('add-post') }}" class=""><i class="lnr lnr-code"></i> <span>New Post</span></a>
                         </li>
                         <li>
-                            <a href="" class=""><i class="lnr lnr-chart-bars"></i> <span>List Post</span></a>
+                            <a href="{{ route('list-post') }}" class=""><i class="lnr lnr-chart-bars"></i> <span>List Post</span></a>
                         </li>
                         <li>
                             <a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>User</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
@@ -104,9 +104,11 @@
 <script src="{{ URL::asset('admin/vendor/jquery.easy-pie-chart/jquery.easypiechart.min.js') }}"></script>
 <script src="{{ URL::asset('admin/vendor/chartist/js/chartist.min.js') }}"></script>
 <script src="{{ URL::asset('admin/scripts/klorofil-common.js') }}"></script>
-
+<script src="{{ asset('vendor/unisharp/laravel-ckeditor/ckeditor.js') }}"></script>
+@yield('javascript')
 <script>
     $(function() {
+  
         var data, options;
         data = {
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -214,6 +216,5 @@
     });
 
 </script>
-
 </body>
 </html>
