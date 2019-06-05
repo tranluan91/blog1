@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Comment;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Validator;
+use Auth;
 
 class CommentController extends Controller
 {
@@ -13,9 +17,14 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        //
+        $post = Post::find($id);
+        if (!$post) {
+            return abort('404');
+        }
+        $comments = $post->Comments()->paginate(10);
+        return view('admin.comment.list', ['comments' => $comments, 'post' => $post]);
     }
 
     /**
@@ -23,9 +32,11 @@ class CommentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $post = Post::find($id);
+        $user = User::find(Auth::user()->id);
+        return view('admin.comment.add', compact('post', 'user'));
     }
 
     /**
@@ -34,9 +45,22 @@ class CommentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'content' => 'required|max:300|min:5'
+        ]);
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate);
+        }
+        $comment = new Comment;
+        $comment->content = $request->content;
+        $comment->user_id = Auth::user()->id;
+        $comment->post_id = $id;
+        $comment->status = Comment::show;
+        $comment->save();
+
+        return redirect()->route('list-comment', $id)->with('status', 'Thêm mới bản ghi thành công');
     }
 
     /**
@@ -57,7 +81,7 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Comment $comment)
-    {
+    { 
         //
     }
 
@@ -68,9 +92,12 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment, $id)
     {
-        //
+        $comment = Comment::find($id);
+        $comment->status = Comment::show;
+        $comment->save();
+        return redirect()->back()->with('status', "Comment đã được duyệt !!");
     }
 
     /**
@@ -79,8 +106,9 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, $id)
     {
-        //
+        Comment::destroy($id);
+        return redirect()->back()->with('status', "Xóa bản ghi thành công !! ");
     }
 }

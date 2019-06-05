@@ -8,7 +8,7 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
-
+use Auth;
 class PostController extends Controller
 {
     /**
@@ -53,7 +53,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->content = $request->content;
         $post->name = $request->name;
-        $post->user_id = 1;
+        $post->user_id = Auth::user()->id;
         $file = $request->img; 
         if (file_exists($file)) {
             if ( $file->getMimeType() == "image/jpeg" && $file->getMimeType("image/png") 
