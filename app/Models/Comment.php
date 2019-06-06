@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
 
-    public function users() 
+    const show = 1;
+    public $timestamps = true;
+
+    public function user() 
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
     
     public function posts() 
