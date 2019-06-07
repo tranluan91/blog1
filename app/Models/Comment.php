@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-
+    const guest_id = 0;
     const show = 1;
     public $timestamps = true;
 

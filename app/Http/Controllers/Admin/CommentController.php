@@ -109,6 +109,6 @@ class CommentController extends Controller
     public function destroy(Comment $comment, $id)
     {
         Comment::destroy($id);
-        return redirect()->back()->with('status', "Xóa bản ghi thành công !! ");
+        return redirect()->back()->with('status', "Xóa bản ghi thành công !!");
     }
 }

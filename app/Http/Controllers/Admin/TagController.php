@@ -16,7 +16,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::paginate(15);
+        $tags = Tag::paginate(10);
         return view('admin.tag.list', compact('tags'));
     }
 
@@ -88,7 +88,7 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag, $id)
     {
-        $validate = Validator::make($request->all(),[
+        $validate = Validator::make($request->all(), [
             'name' => 'required|min:4|max:10'
         ]);
         if ($validate->fails()) {

@@ -28,7 +28,7 @@
                                 <tr>
                                     <td>{{ $comment->id }}</td>
                                     <td>
-                                        {{ $comment->user()->first()->name }}
+                                        {{ ($comment->name) ? $comment->name : ($comment->user()->first())['name'] }}
                                     </td>
                                     <td>{{ $comment->content }}</td>
                                     <td>{{ ($comment->status) ? "Hiển thị" : "Ẩn" }}</td>
@@ -57,3 +57,4 @@
     </div>
 </div>
 @stop
+

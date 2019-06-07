@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Validator;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::paginate(15);
+        $categories = Category::paginate(10);
         return view('admin.category.list', ['categories' => $categories]);
     }
 
@@ -99,6 +100,15 @@ class CategoryController extends Controller
         $category->status = $request->status;
         $category->name = $request->name;
         $category->save();
+        $posts = Post::all()->where('category_id', '=', $category->id);
+        foreach ($posts as $post){
+            if ($request->status != Category::show) {
+                $post->status = Post::hide;
+            } else {
+                $post->status = Post::show;
+            }
+            $post->save();
+        }
         
         return redirect()->route('list-category')->with('status', 'Update bản ghi thành công !!');
     }

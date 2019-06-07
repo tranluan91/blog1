@@ -25,13 +25,13 @@ class UserController extends Controller
     }
 
     public function store(Request $request)
-    {       
-        $validate = Validator::make($request->all(),[
-            'name'=>'required|max:10|min:4',
+    {
+        $validate = Validator::make($request->all(), [
+            'name'=>'required|max:15|min:4',
             'email' => 'required|email|unique:users,email',
-            'password'=>'required|max:10|min:4|',
+            'password'=>'required|max:25|min:4|',
+            'img' => 'required|mimes:jpeg,gif,png|file|max:3072',
         ]);
-
         if ($validate->fails()) {
           return redirect()->back()->withErrors($validate);
         } else {
@@ -44,18 +44,9 @@ class UserController extends Controller
             $file = $request->img;
 
             if (file_exists($file)) {
-                if ($file->getMimeType() == "image/jpeg" && $file->getMimeType("image/png") 
-                && $file->getMimeType("image/gif")){ 
-                    if ($file->getSize()<5000000) {
-                        $file->move("uploads",$file->getClientOriginalName());
-                        $upload = "uploads/".$file->getClientOriginalName();
-                        $user->img = $upload;
-                        $user->save();
-
-                    } else {
-                        echo'upload file failed';
-                    }
-                }
+                $file->move("uploads", $file->getClientOriginalName());
+                $upload = "uploads/". $file->getClientOriginalName();
+                $user->img = $request->img;
             }
             return redirect()->route('list-user');
         }
@@ -63,37 +54,43 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        $user = User::all();
-        return  view('admin.user.list',compact('user'));
+        $user = User::paginate(5);
+        return  view('admin.user.list', compact('user'));
     }
 
     public function edit(User $user, $id)
     {
         $user = User::find($id);
-        return view('admin.user.edit',compact('user'));
+        return view('admin.user.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user,$id)
+    public function update(Request $request, User $user, $id)
     {
+        if ($request->img){
+            $validate = Validator::make($request->all(), [
+                'name'=>'required|max:15|min:4',
+                'email' => 'required|email',
+                'img' => 'required|mimes:jpeg,gif,png|file|max:3072',
+            ]);
+        } else {
+            $validate = Validator::make($request->all(), [
+                'name'=>'required|max:15|min:4',
+                'email' => 'required|email',
+            ]);
+        }
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate);
+        } 
         $user = User::find($id);
         $user->name = $request->name;
         $user->role = $request->role;
         $user->action = $request->action;
         $user->email = $request->email;
         $file=$request->img;
-
         if (file_exists($file)) {
-            if ($file->getMimeType() == "image/jpeg" && $file->getMimeType("image/png")
-            && $file->getMimeType("image/gif")){
-                if ($file->getSize()<5000000){
-                    $file->move("uploads",$file->getClientOriginalName());
-                    $upload = "uploads/".$file->getClientOriginalName();
-                    $user->img = $upload;
-                    $user->save();
-                } else {
-                    echo'upload file failed';  
-                }
-            }
+            $file->move("uploads", $file->getClientOriginalName());
+            $upload = "uploads/". $file->getClientOriginalName();
+            $user->img = $upload;
         }
         $user->save();
         return redirect()->route('list-user');
