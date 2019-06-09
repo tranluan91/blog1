@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(15);
+        $posts = Post::paginate(5);
         return view('admin.post.list', compact('posts'));
     }
 
@@ -44,7 +44,8 @@ class PostController extends Controller
         $validate = Validator::make($request->all(), [
             'name' => 'required|unique:posts,name|min:4|max:50',
             'tags' => 'required',
-            'content' => 'required|min:50|max:1000'
+            'content' => 'required|min:60|max:3000',
+            'img' => 'mimes:jpeg,gif,png|file|max:3072',
         ]);
         if ($validate->fails()) {
             return redirect()->route('add-post')->withErrors($validate);
@@ -53,47 +54,39 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->content = $request->content;
         $post->name = $request->name;
+        $post->status = $request->status;
         $post->user_id = Auth::user()->id;
         $file = $request->img; 
         if (file_exists($file)) {
-            if ( $file->getMimeType() == "image/jpeg" && $file->getMimeType("image/png") 
-            && $file->getMimeType("image/gif") ){ 
-                if ($file->getSize() < 5000000) {
-                    $file->move("uploads", $file->getClientOriginalName());
-                    $upload = "uploads/".$file->getClientOriginalName();
-                    $post->img = $upload;
-                    $post->save();
-                    $tags = $request->tags;
-                    $tag = strpos($tags, ';');
-                    if ($tag) {
-                        $tagsNames = explode(';', $tags);
-                        foreach ($tagsNames as $tagsName) {
-                            $name = $tagsName;
-                            $tag = Tag::where('name', '=', $name)->first();
-                            if (!$tag){
-                                $tag = new Tag;
-                                $tag->name = $name;
-                                $tag->save();
-                            }
-                            $post->tags()->attach($tag->id);
-                        }
-                    } else {
-                        $tag = Tag::where('name', '=', $name)->get()->first();
-                        if (!$tag) {
-                            $tag = new Tag;
-                            $tag->name = $name;
-                            $tag->save();
-                        }
-                        $post->tags()->attach($tag->id);
+            $file->move("uploads", $file->getClientOriginalName());
+            $upload = "uploads/". $file->getClientOriginalName();
+            $post->img = $upload;
+            $post->save();
+            $tags = $request->tags;
+            $tag = strpos($tags, ';');
+            if ($tag) {
+                $tagsNames = explode(';', $tags);
+                foreach ($tagsNames as $tagsName) {
+                    $name = $tagsName;
+                    $tag = Tag::where('name', '=', $name)->first();
+                    if (!$tag){
+                        $tag = new Tag;
+                        $tag->name = $name;
+                        $tag->save();
                     }
-                    
-                } else {
-                    echo'upload file failed';
+                    $post->tags()->attach($tag->id);
                 }
+            } else {
+                $tag = Tag::where('name', '=', $tags)->get()->first();
+                if (!$tag) {
+                    $tag = new Tag;
+                    $tag->name = $tags;
+                    $tag->save();
+                }
+                $post->tags()->attach($tag->id);
             }
         }
-
-        return redirect()->route('list-post')->with('status','Thêm mới bài viết thành công !!');
+        return redirect()->route('list-post')->with('status', 'Thêm mới bài viết thành công !!');
     }
 
     /**
@@ -125,11 +118,11 @@ class PostController extends Controller
             if ($i==1) {
                 $name = $tag->name;
             } else {
-                $name .= ";".$tag->name ;
+                $name .= ";". $tag->name ;
             }
         }
 
-        return view('admin.post.edit',compact('categories','post','name'));
+        return view('admin.post.edit', compact('categories', 'post', 'name'));
     }
 
     /**
@@ -141,10 +134,11 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post, $id)
     {    
-        $validate = Validator::make($request->all(),[
-            'name' => 'required|min:4|max:50',
+        $validate = Validator::make($request->all(), [
+            'name' => 'required|min:4|max:60',
             'tags' => 'required',
-            'content' => 'required|min:50|max:1000'
+            'content' => 'required|min:50|max:3000',
+            'img' => 'mimes:jpeg,gif,png|file|max:3072',
         ]);
         if ($validate->fails()) {
             return redirect()->route('add-post')->withErrors($validate);
@@ -153,20 +147,14 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->content = $request->content;
         $post->name = $request->name;
-        $post->user_id = 1;
+        $post->status = $request->status;
         $file = $request->img;
         $upload = $post->img;
         if (file_exists($file)) {
-            if ($file->getMimeType() == "image/jpeg" && $file->getMimeType("image/png") 
-            && $file->getMimeType("image/gif")){ 
-                if ($file->getSize() < 5000000) {
-                    $file->move("uploads", $file->getClientOriginalName());
-                    $upload = "uploads/".$file->getClientOriginalName();
-                    $post->img = $upload;
-                } else {
-                    echo'upload file failed';
-                }
-            }
+            $file->move("uploads", $file->getClientOriginalName());
+            $upload = "uploads/". $file->getClientOriginalName();
+            $post->img = $upload;
+            
         } else {
             $post->img = $upload;
         }
@@ -175,7 +163,7 @@ class PostController extends Controller
         $tags = $request->tags;
         $tag = strpos($tags, ';');
         if ($tag) {
-            $tagsNames = explode(';',$tags);
+            $tagsNames = explode(';', $tags);
             foreach ($tagsNames as $tagsName) {
                 $name = $tagsName;
                 $tag = Tag::where('name', '=', $name)->first();
@@ -197,7 +185,7 @@ class PostController extends Controller
         }
         $post->tags()->sync($tagId);
 
-        return redirect()->route('list-post')->with('status','Sửa bài viết thành công !!');
+        return redirect()->route('list-post')->with('status', 'Sửa bài viết thành công !!');
     }
 
     /**
@@ -212,6 +200,6 @@ class PostController extends Controller
         $post->tags()->detach();
         Post::destroy($id);
         
-        return redirect()->back()->with('status', 'Xóa bản ghi thành công !!');   
+        return redirect()->back()->with('status', 'Xóa bản ghi thành công !!');
     }
 }

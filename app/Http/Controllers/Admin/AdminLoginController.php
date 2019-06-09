@@ -24,7 +24,7 @@ class AdminLoginController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return  redirect()->back()->withErrors($validate);
+            return redirect()->back()->withErrors($validate);
         } 
         $remember = $request->remember;
         $login = ['email' => $request->email, 'password' => $request->password, 'role' => User::adminRole];

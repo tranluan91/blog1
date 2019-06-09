@@ -46,11 +46,11 @@
                                     <td>{{ $post->name }}</td>
                                     <td>{{ $post->content }}</td>
                                     <td><img src="{{ URL::asset($post->img) }}" alt="" style="width: 150px"></td>
-                                    <td>{{ $post->status ? 'Hiển thị' : 'Ẩn' }}</td>
+                                    <td>{{ ($post->status) ? "Hiển thị" : "Ẩn" }}</td>
                                     <td>
                                     <button type="button" class="btn btn-primary"><a href="{{ route('edit-post', $post->id) }}" style="color: #ffffff!important">Edit</a></button>
                                     <button type="button" class="btn btn-warning"><a href="{{ route('list-comment', $post->id) }}" style="color: #ffffff!important">View Comment</a></button>
-                            
+
                                         {!! Form::open(['method' => 'delete', 'url' => "/backend/delete-post/$post->id"]) !!}
                                             {!! Form::submit('DELETE', ['class' => 'btn btn-danger', 'onclick' => "return confirm('Are you sure?')"]) !!}
                                         {!! Form::close() !!}
@@ -67,3 +67,4 @@
     </div>
 </div>
 @stop
+

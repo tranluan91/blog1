@@ -10,6 +10,7 @@
                     <div class="alert alert-danger">{{ session('erorr') }}</div>
                 @endif
                     @include('admin.layout.validate')
+                    @include('admin.layout.status')
                     <div class = "panel-heading">
                         <h3 class = "panel-title">Inputs</h3>
                     </div>

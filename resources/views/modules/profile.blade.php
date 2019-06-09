@@ -1,20 +1,18 @@
-@extends('admin.master')
+@extends('master')
 @section('content')
-<div class="main-content">
-    <div class="container-fluid">
-        <h3 class="page-title">List Users</h3>
+
+<section class="blog_area section-gap single-post-area">
+    <div class="container box_1170">
         <div class="row">
             <div class="col-md-12">
                 <div class="panel">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Basic Table</h3>
+                        <h3 class="panel-title" style="text-align:center;margin-bottom:50px;">Profile</h3>
                     </div>
-                    @include('admin.layout.status')
                     <div class="panel-body">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Avatar</th>
@@ -23,12 +21,11 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $user->id }}</td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td><img src="{{ URL::asset($user->img) }}" alt="" style="width: 200px"></td>
                                     <td>
-                                        <button type="button" class="btn btn-primary"><a href="{{ route('edit-profile',$user->id) }}" style="color: #ffffff!important">Update profile</a></button>
+                                        <button type="button" class="btn btn-primary"><a href="{{ route('userEditProfile', $user->id) }}" style="color: #ffffff!important">Update profile</a></button>
                                     </td>
                                     <td>
                                     </td>
@@ -40,5 +37,7 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 @stop
+
+

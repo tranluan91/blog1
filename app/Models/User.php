@@ -11,7 +11,7 @@ class User extends Authenticatable
     use Notifiable;
 
     const adminRole = 1;
-
+    const actionOn = 0;
     /**
      * The attributes that are mass assignable.
      *

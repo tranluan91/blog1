@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-
+    const show = 1;
+    const hide = 0;
     public function category()
     {
         return $this->belongsTo('App\Models\Category');
